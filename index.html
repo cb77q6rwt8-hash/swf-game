@@ -6,9 +6,19 @@
 <title>SWF Game</title>
 
 <script>
+const VERSION = "20260510-subfix-1";
+
+// sub/ 内のSWF読み込みを root のSWFへ橋渡しするService Workerを登録
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./sw.js?v=" + VERSION).then(async () => {
+    if (!navigator.serviceWorker.controller && !location.search.includes("swready=1")) {
+      location.replace(location.pathname + "?swready=1&v=" + VERSION);
+    }
+  });
+}
+
 window.RufflePlayer = window.RufflePlayer || {};
 window.RufflePlayer.config = {
-  // iPhone Safariでタップ判定がずれる・効かない場合の対策
   renderer: "canvas",
   autoplay: "on",
   scale: "showAll",
@@ -17,9 +27,11 @@ window.RufflePlayer.config = {
   unmuteOverlay: "hidden",
   allowScriptAccess: true,
   warnOnUnsupportedContent: true,
-  contextMenu: "on"
+  contextMenu: "on",
+  base: "./"
 };
 </script>
+
 <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
 
 <style>
@@ -44,23 +56,24 @@ html, body {
   background: #000;
 }
 
-ruffle-player, object, embed {
+embed, object, ruffle-player {
   width: min(100vw, 100dvh);
   height: min(100vw, 100dvh);
   max-width: 600px;
   max-height: 600px;
   display: block;
-  outline: none;
 }
 </style>
 </head>
+
 <body>
 <div id="wrap">
-  <object data="hand-to-hand-imouto.swf" type="application/x-shockwave-flash" width="600" height="600">
-    <param name="movie" value="hand-to-hand-imouto.swf">
-    <param name="allowScriptAccess" value="always">
-    <param name="wmode" value="window">
-  </object>
+  <embed
+    src="hand-to-hand-imouto.swf?v=20260510-subfix-1"
+    type="application/x-shockwave-flash"
+    width="600"
+    height="600"
+    allowscriptaccess="always">
 </div>
 </body>
 </html>
