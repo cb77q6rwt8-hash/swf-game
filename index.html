@@ -2,54 +2,65 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Flash Game</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SWF Game</title>
+
 <script>
-// SWF内部の sub/xxx.swf 読み込みを、GitHub上の xxx.swf に振り替えるためのService Worker。
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js').then(async (reg) => {
-    await navigator.serviceWorker.ready;
-    if (!navigator.serviceWorker.controller) {
-      location.reload();
-    }
-  });
-}
 window.RufflePlayer = window.RufflePlayer || {};
 window.RufflePlayer.config = {
+  // iPhone Safariでタップ判定がずれる・効かない場合の対策
+  renderer: "canvas",
   autoplay: "on",
-  unmuteOverlay: "hidden",
-  letterbox: "on",
   scale: "showAll",
-  quality: "high",
-  allowScriptAccess: true
+  letterbox: "on",
+  splashScreen: false,
+  unmuteOverlay: "hidden",
+  allowScriptAccess: true,
+  warnOnUnsupportedContent: true,
+  contextMenu: "on"
 };
 </script>
 <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+
 <style>
-  html, body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    background: #000;
-    overflow: hidden;
-  }
-  #wrap {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  embed {
-    width: 100vw;
-    height: 100vh;
-    display: block;
-  }
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+#wrap {
+  width: 100vw;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+
+ruffle-player, object, embed {
+  width: min(100vw, 100dvh);
+  height: min(100vw, 100dvh);
+  max-width: 600px;
+  max-height: 600px;
+  display: block;
+  outline: none;
+}
 </style>
 </head>
 <body>
-  <div id="wrap">
-    <embed src="hand-to-hand-imouto.swf" width="100%" height="100%">
-  </div>
+<div id="wrap">
+  <object data="hand-to-hand-imouto.swf" type="application/x-shockwave-flash" width="600" height="600">
+    <param name="movie" value="hand-to-hand-imouto.swf">
+    <param name="allowScriptAccess" value="always">
+    <param name="wmode" value="window">
+  </object>
+</div>
 </body>
 </html>
